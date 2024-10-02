@@ -29,13 +29,16 @@ body{
     justify-items: center;
     align-items: center;
     grid-template-columns: repeat(3, 1fr);
-    background-color: #698F3F;
-    border-radius: 20px;
+    background-color: #F5EFED;
 }
 .cell{
     box-sizing: border-box;
     width: calc(var(--container-width)/3);
     height: calc(var(--container-width)/3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 .brd-bottom{
     border-bottom: 2px solid black;
@@ -48,4 +51,10 @@ body{
 }
 .brd-right{
     border-right: 2px solid black;
+}
+.cross{
+    background-color: #497cca;
+}
+.circle{
+    background-color: #af3838;
 }

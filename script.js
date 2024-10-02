@@ -69,6 +69,7 @@ function Cell() {
 }
 const GameController = function () {
     let gameboard = Gameboard();
+    let isGameOver = false;
     const players = [
         {
             name: "player1",
@@ -101,25 +102,41 @@ const GameController = function () {
         let isSuccess = gameboard.placeMark(idx, getActivePlayer().token);
         if (!isSuccess) {
             console.log("exiting round");
-            resetGame();
             return;
         }
         if (gameboard.checkWinner(getActivePlayer().token)) {
             console.log(`Congratulations to ${getActivePlayer().name}. You won!`);
-            resetGame();
+            isGameOver = true;
         } else {
             switchActivePlayer();
             printNewRound();
         }
     }
-    return { playRound };
+    return { playRound, getBoard: gameboard.getBoard };
 }
 const ScreenController = function() {
-    const game = GameController();
-    
+    const cell = document.querySelectorAll('.cell');
+    const cellArray = Array.from(cell);
+
+    game = GameController();
+    for(let cell of cellArray){
+        cell.addEventListener('click', function(){
+            handleClick(this);
+        })
+    }
+
+    const displayBoard = () => {
+        const board = game.getBoard();
+        
+    }
+    const handleClick = (cell) =>{
+        let idx = cell.dataset.idx;
+        game.playRound(idx);
+    }
+
 }
 
-
+ScreenController();
 
 
 
