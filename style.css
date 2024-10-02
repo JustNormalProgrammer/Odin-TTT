@@ -1,0 +1,51 @@
+:root{
+    --container-width: 600px;
+}
+body{
+    height: 100vh;
+    font-family: "Permanent Marker", cursive;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    background-color: #0F0A0A;
+    color: #F5EFED;
+}
+.container{
+    background-color: #BDBF09;
+    height: calc(var(--container-width) + 400px);
+    width: calc(var(--container-width) + 400px);
+    margin: 30px;
+    border-radius: 20px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+}
+.grid{
+    width: var(--container-width);
+    height: var(--container-width);
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    background-color: #698F3F;
+    border-radius: 20px;
+}
+.cell{
+    box-sizing: border-box;
+    width: calc(var(--container-width)/3);
+    height: calc(var(--container-width)/3);
+}
+.brd-bottom{
+    border-bottom: 2px solid black;
+}
+.brd-top{
+    border-top: 2px solid black;
+}
+.brd-left{
+    border-left: 2px solid black;
+}
+.brd-right{
+    border-right: 2px solid black;
+}
