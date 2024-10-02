@@ -17,29 +17,42 @@ const Gameboard = function () {
         }
     }
     const placeMark = (idx, playerToken) => {
-        if(board[idx].getValue !== 0){
+        if(board[idx].getValue() !== 0){
             console.log("Illegal move, space is occupied by another mark");
-            return -1;
+            return false;
         } else {
             board[idx].addToken(playerToken);
             numberOfMarks++;
-            return 1;
+            return true;
         }
     }
+    const checkIfDraw = () => {
+        for(let cell of board){
+            if(cell.getValue() ===0){
+                return false;
+            }
+        }
+        return true;
+    }
     const checkWinner = (playerToken) => {
+        // No winner until at least 6th mark
         if(numberOfMarks < 5) {
-            return 0;
+            return false;
+        }
+        if(checkIfDraw()) {
+            console.log("Game is a draw!");
+            return false;
         }
         // Looks awfull, still better than L00ps tho. 
         if (
-            (board[0] == playerToken && board[1] == playerToken && board[2] == playerToken) ||
-            (board[3] == playerToken && board[4] == playerToken && board[5] == playerToken) ||
-            (board[6] == playerToken && board[7] == playerToken && board[8] == playerToken) ||
-            (board[0] == playerToken && board[3] == playerToken && board[6] == playerToken) ||
-            (board[1] == playerToken && board[4] == playerToken && board[7] == playerToken) ||
-            (board[2] == playerToken && board[5] == playerToken && board[8] == playerToken) ||
-            (board[0] == playerToken && board[4] == playerToken && board[8] == playerToken) ||
-            (board[2] == playerToken && board[4] == playerToken && board[6] == playerToken)
+            (board[3].getValue() == playerToken && board[4].getValue() == playerToken && board[5].getValue() == playerToken) ||
+            (board[0].getValue() == playerToken && board[1].getValue() == playerToken && board[2].getValue() == playerToken) ||
+            (board[6].getValue() == playerToken && board[7].getValue() == playerToken && board[8].getValue() == playerToken) ||
+            (board[0].getValue() == playerToken && board[3].getValue() == playerToken && board[6].getValue() == playerToken) ||
+            (board[1].getValue() == playerToken && board[4].getValue() == playerToken && board[7].getValue() == playerToken) ||
+            (board[2].getValue() == playerToken && board[5].getValue() == playerToken && board[8].getValue() == playerToken) ||
+            (board[0].getValue() == playerToken && board[4].getValue() == playerToken && board[8].getValue() == playerToken) ||
+            (board[2].getValue() == playerToken && board[4].getValue() == playerToken && board[6].getValue() == playerToken)
             ) {
             return true;
             } else {
@@ -54,13 +67,8 @@ function Cell(){
     const getValue = () => value;
     return {addToken, getValue};
 }
-const MakeUser = function (name) {
-    let score = 0;
-
-    return { name, getScore, incrementScore };
-};
 const GameController = function () {
-    const gameboard = Gameboard();
+    let gameboard = Gameboard();
     const players = [
         {
             name: "player1",
@@ -70,7 +78,7 @@ const GameController = function () {
             token: 1,
         },
         {
-            name: "player1",
+            name: "player2",
             score: 0,
             getScore: () => score,
             incrementScore: () => score++,
@@ -86,15 +94,19 @@ const GameController = function () {
         gameboard.printBoard();
         console.log(`${getActivePlayer().name}'s turn...`);
     }
+    const resetGame = () => gameboard = Gameboard();
 
     const playRound = (idx) => {
-        console.log(`Placing ${getActivePlayer().name}mark on ${idx} cell...`);
+        console.log(`Placing ${getActivePlayer().name} mark on ${idx} cell...`);
         let isSuccess = gameboard.placeMark(idx, getActivePlayer().token);
-        while(isSuccess === -1) {
-            isSuccess = gameboard.placeMark(idx, getActivePlayer().token);
+        if(!isSuccess) {
+            console.log("exiting round");
+            resetGame();
+            return;
         }
         if(gameboard.checkWinner(getActivePlayer().token)){
             console.log(`Congratulations to ${getActivePlayer().name}. You won!`);
+            resetGame();
         } else {
             switchActivePlayer();
             printNewRound();
@@ -104,9 +116,10 @@ const GameController = function () {
 }
 
 let game = GameController();
-
-while(true) {
-    let idx = prompt("IDX:")
+while(true){
+    let idx = prompt()
     game.playRound(idx);
 }
+
+
 
