@@ -34,6 +34,11 @@ const Gameboard = function () {
         }
         return true;
     }
+    const resetBoard = () => {
+        for (let i = 0; i < 9; i++) {
+            board[i] = Cell();
+        }
+    }
     const checkWinner = (playerToken) => {
         // No winner until at least 6th mark
         if (numberOfMarks < 5) {
@@ -57,7 +62,7 @@ const Gameboard = function () {
         }
         return -1;
     }
-    return { getBoard, printBoard, placeMark, checkWinner };
+    return { getBoard, printBoard, placeMark, checkWinner, resetBoard};
 };
 function Cell() {
     let value = 0;
@@ -96,7 +101,7 @@ const GameController = function () {
         console.log(`${getActivePlayer().name}'s turn...`);
     }
     const resetGame = () => {
-        gameboard = Gameboard();
+        gameboard.resetBoard();
         isGameOver = false;
         activePlayer = players[0];
     }
@@ -137,7 +142,7 @@ const ScreenController = function () {
     for (let cell of cellArray) {
         cell.addEventListener('click', function () {
             handleClick(this);
-        })
+        });
     }
 
     const displayCell = (cell,player) => {
@@ -154,6 +159,7 @@ const ScreenController = function () {
             p.textContent = '';
         }
     }
+
     const handleClick = (cell) => {
         let isGameOver = game.getIsGameOver();
         if(isGameOver) resetDisplay();
