@@ -19,7 +19,7 @@
 <body>
     <div class="container">
         <h1>Tic-Tac-Toe</h1>
-        <p></p>
+        <div class="final-msg"></div>
         <div class="grid">
             <div class="cell brd-right brd-bottom" data-idx="0"></div>
             <div class="cell brd-bottom brd-right brd-left" data-idx="1"></div>
@@ -31,7 +31,17 @@
             <div class="cell brd-top brd-left brd-right " data-idx="7"></div>
             <div class="cell brd-left brd-top " data-idx="8"></div>
         </div>
+        <button>Reset</button>
     </div>
+    <dialog>
+        <form action="#" method="dialog" class="dialog-form">
+            <label for="player1">Player 1 name: </label>
+            <input type="text" name="player1" id="player1">
+            <label for="player2">Player 2 name: </label>
+            <input type="text" name="player2" id="player2">
+            <button class="dialog-btn">Start</button>
+        </form>
+    </dialog>
 </body>
 
 </html>

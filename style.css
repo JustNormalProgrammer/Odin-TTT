@@ -1,6 +1,9 @@
 :root{
     --container-width: 600px;
 }
+*,*:focus,*:hover{
+    outline:none;
+}
 body{
     height: 100vh;
     font-family: "Permanent Marker", cursive;
@@ -10,6 +13,12 @@ body{
     font-size: 2rem;
     background-color: #0F0A0A;
     color: #F5EFED;
+}
+h1{
+    margin: 0;
+}
+.final-msg{
+    margin: 10px;
 }
 .container{
     background-color: #BDBF09;
@@ -57,4 +66,35 @@ body{
 }
 .circle{
     background-color: #af3838;
+}
+button{
+    margin-top: 20px;
+    justify-self: center;
+    color: #F5EFED;
+    background-color:#af3838;
+    border: none;
+    border-radius: 8px;
+    width: 200px;
+    height: 50px;
+}
+.dialog-form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.dialog-form input{
+    width: 200px;
+    height: 20px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid black'
+}
+dialog::backdrop{
+    background: rgba(0, 0, 0, 0.6); 
+}
+.dialog-form input:focus{
+    border: 2px solid #1ed32d;
+}
+.dialog-btn{
+    background-color: #1ed32d;
 }

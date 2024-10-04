@@ -44,7 +44,7 @@ const Gameboard = function () {
         if (numberOfMarks < 5) {
             return -1;
         }
-        
+
         // Looks awfull, still better than L00ps tho. 
         if (
             (board[3].getValue() == playerToken && board[4].getValue() == playerToken && board[5].getValue() == playerToken) ||
@@ -57,12 +57,12 @@ const Gameboard = function () {
             (board[2].getValue() == playerToken && board[4].getValue() == playerToken && board[6].getValue() == playerToken)
         ) {
             return 1;
-        } else if(checkIfDraw()){
+        } else if (checkIfDraw()) {
             return 0;
         }
         return -1;
     }
-    return { getBoard, printBoard, placeMark, checkWinner, resetBoard};
+    return { getBoard, printBoard, placeMark, checkWinner, resetBoard };
 };
 function Cell() {
     let value = 0;
@@ -70,12 +70,12 @@ function Cell() {
     const getValue = () => value;
     return { addToken, getValue };
 }
-const GameController = function () {
+const GameController = function (player1,player2) {
     let gameboard = Gameboard();
     let isGameOver = false;
     const players = [
         {
-            name: "player1",
+            name: player1,
             marker: "X",
             score: 0,
             getScore: () => this.score,
@@ -83,7 +83,7 @@ const GameController = function () {
             token: 1,
         },
         {
-            name: "player2",
+            name: player2,
             marker: "O",
             score: 0,
             getScore: () => score,
@@ -96,6 +96,10 @@ const GameController = function () {
     const switchActivePlayer = () => activePlayer = activePlayer === players[0] ? players[1] : players[0];
     const getActivePlayer = () => activePlayer;
 
+    const setPlayerNames = (name1, name2) =>{
+        players[0].name = name1;
+        players[1].name = name2; 
+    }
     const printNewRound = () => {
         gameboard.printBoard();
         console.log(`${getActivePlayer().name}'s turn...`);
@@ -107,7 +111,7 @@ const GameController = function () {
     }
     const getIsGameOver = () => isGameOver;
     const playRound = (idx) => {
-        if(isGameOver) {
+        if (isGameOver) {
             resetGame();
         }
         console.log(`Placing ${getActivePlayer().name} mark on ${idx} cell...`);
@@ -121,31 +125,51 @@ const GameController = function () {
             console.log(`Congratulations to ${getActivePlayer().name}. You won!`);
             isGameOver = true;
             return 1;
-        } else if(gameStatus === 0) {
+        } else if (gameStatus === 0) {
             console.log(`It's a Draw!`)
             isGameOver = true;
             return 0;
-        } 
+        }
         else {
             switchActivePlayer();
             printNewRound();
         }
     }
-    return { playRound, getBoard: gameboard.getBoard, getActivePlayer, checkWinner: gameboard.checkWinner, getIsGameOver};
+    return { playRound, resetGame,setPlayerNames, getBoard: gameboard.getBoard, getActivePlayer, checkWinner: gameboard.checkWinner, getIsGameOver };
 }
 const ScreenController = function () {
     const cells = document.querySelectorAll('.cell');
     const cellArray = Array.from(cells);
-    const p = document.querySelector('p');
+    const finalMsg = document.querySelector('.final-msg');
+    const buttonReset = document.querySelector('button');
+    const dialog = document.querySelector("dialog");
+    const form = document.querySelector('form');
 
-    game = GameController();
+    let player1 = "player1";
+    let player2 = "player2";
+
+    dialog.showModal();
+
+    const game = GameController();
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        player1 = document.querySelector('#player1').value;
+        player2 = document.querySelector('#player2').value;
+        game.setPlayerNames(player1, player2);
+        dialog.close();
+    });
     for (let cell of cellArray) {
         cell.addEventListener('click', function () {
             handleClick(this);
         });
     }
+    buttonReset.addEventListener('click', () => {
+        game.resetGame();
+        resetDisplay();
+    })
 
-    const displayCell = (cell,player) => {
+    const displayCell = (cell, player) => {
         const board = game.getBoard();
         let classCSS = null;
         classCSS = board[cell.dataset.idx].getValue() === 1 ? "cross" : "circle";
@@ -153,25 +177,25 @@ const ScreenController = function () {
         cell.classList.add(classCSS);
     }
     const resetDisplay = () => {
-        for(let cell of cellArray) {
+        for (let cell of cellArray) {
             cell.classList.remove('circle', 'cross');
             cell.textContent = '';
-            p.textContent = '';
+            finalMsg.textContent = '';
         }
     }
 
     const handleClick = (cell) => {
         let isGameOver = game.getIsGameOver();
-        if(isGameOver) resetDisplay();
+        if (isGameOver) resetDisplay();
         let idx = cell.dataset.idx;
         let activePlayer = game.getActivePlayer();
         let isWinner = game.playRound(idx)
-        if(isWinner === 1){
-            p.textContent = `Congrats ${game.getActivePlayer().name}! You won!`
-        } else if(isWinner === 0){
-            p.textContent = `It's a Draw!`;
+        if (isWinner === 1) {
+            finalMsg.textContent = `Congrats ${game.getActivePlayer().name}! You won!`
+        } else if (isWinner === 0) {
+            finalMsg.textContent = `It's a Draw!`;
         }
-        if(isWinner !== -1){
+        if (isWinner !== -1) {
             displayCell(cell, activePlayer);
         }
     }
